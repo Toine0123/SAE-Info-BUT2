@@ -46,11 +46,14 @@ namespace SAE_INFO
                                        new Case.Propriete(350, new ColorC().BLEU),
                                        new Case.Taxes(100),
                                        new Case.Propriete(400, new ColorC().BLEU)};
-        Pion joueur;
+        Pion[] joueurs = new Pion[4] {new Pion(),
+                                      new Pion(),
+                                      new Pion(),
+                                      new Pion()};
         int resdes;
+        int joueur = 0;
         public Form1()
         {
-            joueur = new Pion();
             InitializeComponent();
         }
 
@@ -60,8 +63,10 @@ namespace SAE_INFO
             Random rand = new Random();
             resdes = rand.Next(6);
             label1.Text = "Valeur du dés = " + resdes.ToString();
-            joueur.Move(resdes);
-            label1.Text += '\n' + "Numéro de Case = " + joueur.GetPosition();
+            label1.Text += "\nArgent avant déplacement = " + joueurs[joueur].GetMoney();
+            joueurs[joueur].Move(resdes, tabCase);
+            label1.Text += "\nArgent après déplacement = " + joueurs[joueur].GetMoney();
+            label1.Text += '\n' + "Numéro de Case = " + joueurs[joueur].GetPosition();
 
             /*affichage en fonction de la case*/
             //reset des label en vue de l'affichage
@@ -72,7 +77,7 @@ namespace SAE_INFO
             label5.Text = "";
             label5.Font = new Font(label5.Font, FontStyle.Regular);
             splitContainer1.Panel1.BackColor = Color.Gray;
-            switch (tabCase[joueur.GetPosition()].GetTyp())
+            switch (tabCase[joueurs[joueur].GetPosition()].GetTyp())
             {
                 case Type.ALLERENPRISON:
                     label2.Text = "Aller en prison";
@@ -90,6 +95,15 @@ namespace SAE_INFO
                 case Type.GARE:
                     label2.Text = "Gare";
                     splitContainer1.Panel1.BackColor = Color.FromArgb(0, 0, 0);
+                    //achat de la propriété
+                    if(tabCase[joueur].GetIsBought() == false)
+                    {
+                        if(MessageBox.Show("Voulez vous acheter cette propriété pour " + tabCase[joueurs[joueur].GetPosition()].GetPrice(), 
+                            "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            tabCase[joueurs[joueur].GetPosition()].SetLevel(1);
+                        }
+                    }
                     break;
                 case Type.PARCGRATUIT:
                     label1.Text = "Parc gratuit";
@@ -99,10 +113,10 @@ namespace SAE_INFO
                     break;
                 case Type.PROPRIETE:
                     label2.Text = "Propriété";
-                    label3.Text = "Terrain nu     " + tabCase[joueur.GetPosition()].GetPrice();
-                    label4.Text = "1 maison     " + (tabCase[joueur.GetPosition()].GetPrice() * 2);
-                    label5.Text = "2 maisons     " + (tabCase[joueur.GetPosition()].GetPrice() * 3);
-                    switch (tabCase[joueur.GetPosition()].GetLevel())
+                    label3.Text = "Terrain nu     " + tabCase[joueurs[joueur].GetPosition()].GetPrice();
+                    label4.Text = "1 maison     " + (tabCase[joueurs[joueur].GetPosition()].GetPrice() * 2);
+                    label5.Text = "2 maisons     " + (tabCase[joueurs[joueur].GetPosition()].GetPrice() * 3);
+                    switch (tabCase[joueurs[joueur].GetPosition()].GetLevel())
                     {
                         case 1:
                             label3.Font = new Font(label3.Font, FontStyle.Bold);
@@ -114,30 +128,42 @@ namespace SAE_INFO
                             label5.Font = new Font(label5.Font, FontStyle.Bold);
                             break;
                     }
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().ROUGE)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().ROUGE)
                     {
                         splitContainer1.Panel1.BackColor = new ColorC().ROUGE;
                     }
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().BLEU)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().BLEU)
                         splitContainer1.Panel1.BackColor = new ColorC().BLEU;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().CYAN)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().CYAN)
                         splitContainer1.Panel1.BackColor = new ColorC().CYAN;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().JAUNE)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().JAUNE)
                         splitContainer1.Panel1.BackColor = new ColorC().JAUNE;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().MARRON)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().MARRON)
                         splitContainer1.Panel1.BackColor = new ColorC().MARRON;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().ORANGE)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().ORANGE)
                         splitContainer1.Panel1.BackColor = new ColorC().ORANGE;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().ROSE)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().ROSE)
                         splitContainer1.Panel1.BackColor = new ColorC().ROSE;
-                    if (((Case.Propriete)tabCase[joueur.GetPosition()]).color == new ColorC().VERT)
+                    if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().VERT)
                         splitContainer1.Panel1.BackColor = new ColorC().VERT;
+                    //achat de la propriété
+                    if (tabCase[joueur].GetIsBought() == false)
+                    {
+                        if (MessageBox.Show("Voulez vous acheter cette propriété pour " + tabCase[joueurs[joueur].GetPosition()].GetPrice(),
+                            "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            tabCase[joueurs[joueur].GetPosition()].SetLevel(1);
+                        }
+                    }
                     break;
                 case Type.TAXES:
                     label2.Text = "Taxe";
-                    label3.Text = "Prix = " + tabCase[joueur.GetPosition()].GetPrice();
+                    label3.Text = "Prix = " + tabCase[joueurs[joueur].GetPosition()].GetPrice();
                     break;
             }
+            joueur += 1;
+            if(joueur>3) joueur = 0;
+            label6.Text = "Tour de joueur " + (joueur + 1);
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
@@ -147,7 +173,6 @@ namespace SAE_INFO
 
         private void label2_Click(object sender, EventArgs e)
         {
-
         }
     }
 }
