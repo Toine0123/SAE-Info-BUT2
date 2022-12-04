@@ -18,6 +18,7 @@ namespace SAE_INFO
             int price;
             int level;
             bool isBought;
+            unsafe Pion proprio;
 
 
         /*----------constructeur-------*/
@@ -31,7 +32,8 @@ namespace SAE_INFO
         public Case(int type)
             {
                 this.type = type;
-            }
+            this.isBought = false;
+        }
         /*-----------get/set----------*/
         public int GetTyp() { return type; }
         public int GetPrice() { return price; }
@@ -45,9 +47,17 @@ namespace SAE_INFO
         public void SetType(int typ) { type = typ; }
         public void SetPrice(int pric) { price = pric; }
         public void SetLevel(int lvl) { level = lvl; }
+        public void setProprio(Pion acheteur)
+        {
+            proprio = acheteur;
+        }
+        public Pion getProprio()
+        {
+            return proprio;
+        }
         /*-----------méthode----------*/
-        
-            
+
+
         bool isBuyable()
         {
             if (level != 0) return false;
@@ -56,12 +66,12 @@ namespace SAE_INFO
         }
 
 
+
         /*------------héritage----------*/
         public class Propriete : Case
         {
             /**-----------variables--------**/
             public Color color;
-
             /**----------constructeur-------**/
             public Propriete(int price, Color color)
             {
@@ -71,6 +81,7 @@ namespace SAE_INFO
                 this.price = price;
                 this.color = color;
             }
+            
         }
 
         public class Gare : Case
@@ -123,14 +134,15 @@ namespace SAE_INFO
 
     class Pion
     {   /*variables*/
-        private int m_argent;
-        private string m_name;
-        private int m_class;
-        private bool m_Isloose;
-        private int m_position;
-        private int m_couldown;
-        private Color m_color;
-        private bool m_IsUsable;
+        private
+            int m_argent;
+            string m_name;
+            int m_class;
+            bool m_Isloose;
+            int m_position;
+            int m_couldown;
+            Color m_color;
+            bool m_IsUsable;
 
         /*méthodes de pion*/
         //constructeur 
@@ -192,14 +204,21 @@ namespace SAE_INFO
 
         /*--méthodes pour m_position--*/
         //méthode move
-        public void Move(int nb_case)
+        public void Move(int nb_case, Case[] tabCase)
         {
             if ((m_position + nb_case) > 39)
             {
                 nb_case -= 40 - m_position;
                 m_position = 0;
+                AddMoney(200);
             }
             m_position += nb_case;
+
+            if(tabCase[m_position].GetIsBought() == true)
+            {
+                AddMoney(-tabCase[m_position].GetPrice());
+                tabCase[m_position].getProprio().AddMoney(tabCase[m_position].GetPrice());
+            }
         }
         //méthode back
         public void Back(int nb_case)
