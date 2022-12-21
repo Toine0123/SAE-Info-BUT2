@@ -2,6 +2,11 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+/*************Problèmes**********
+ * certaine case ne sont pas proposer d'acheter quand on tombe la première fois dessus
+ * Les terrain sont ancore achetable quand ils ont été acheter
+ * l'argent n'est pas débité lors d'un achat
+ ********************************/
 namespace SAE_INFO
 {
     public partial class Form1 : Form
@@ -59,9 +64,14 @@ namespace SAE_INFO
 
         private void buttonDes_Click(object sender, EventArgs e)
         {
+
+            label6.Text = "tour de joueur " + (joueur + 1) + "\n";
             /*gestion du lancer de dé et avancer sur le plateaux*/
             Random rand = new Random();
-            resdes = rand.Next(6);
+            do
+            {
+                resdes = rand.Next(7);
+            } while (resdes < 1 || resdes > 6);
             label1.Text = "Valeur du dés = " + resdes.ToString();
             label1.Text += "\nArgent avant déplacement = " + joueurs[joueur].GetMoney();
             joueurs[joueur].Move(resdes, tabCase);
@@ -96,13 +106,9 @@ namespace SAE_INFO
                     label2.Text = "Gare";
                     splitContainer1.Panel1.BackColor = Color.FromArgb(0, 0, 0);
                     //achat de la propriété
-                    if(tabCase[joueur].GetIsBought() == false)
+                    if(tabCase[joueur].isBuyable() == true)
                     {
-                        if(MessageBox.Show("Voulez vous acheter cette propriété pour " + tabCase[joueurs[joueur].GetPosition()].GetPrice(), 
-                            "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            tabCase[joueurs[joueur].GetPosition()].SetLevel(1);
-                        }
+                        joueurs[joueur].Buy(tabCase[joueurs[joueur].GetPosition()]);
                     }
                     break;
                 case Type.PARCGRATUIT:
@@ -147,13 +153,9 @@ namespace SAE_INFO
                     if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().VERT)
                         splitContainer1.Panel1.BackColor = new ColorC().VERT;
                     //achat de la propriété
-                    if (tabCase[joueur].GetIsBought() == false)
+                    if (tabCase[joueur].isBuyable() == true)
                     {
-                        if (MessageBox.Show("Voulez vous acheter cette propriété pour " + tabCase[joueurs[joueur].GetPosition()].GetPrice(),
-                            "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            tabCase[joueurs[joueur].GetPosition()].SetLevel(1);
-                        }
+                        joueurs[joueur].Buy(tabCase[joueurs[joueur].GetPosition()]);
                     }
                     break;
                 case Type.TAXES:
@@ -161,9 +163,10 @@ namespace SAE_INFO
                     label3.Text = "Prix = " + tabCase[joueurs[joueur].GetPosition()].GetPrice();
                     break;
             }
+            label1.Text += "\nArgent en fin de tour = " + joueurs[joueur].GetMoney();
             joueur += 1;
             if(joueur>3) joueur = 0;
-            label6.Text = "Tour de joueur " + (joueur + 1);
+            label6.Text += "joueur suivant : " + (joueur + 1);
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)

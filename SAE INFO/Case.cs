@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SAE_INFO
 {
@@ -40,8 +41,6 @@ namespace SAE_INFO
         public int GetLevel() { return level; }
         public bool GetIsBought() 
             {
-                if (level == 0)isBought = false;
-                else isBought = true;
                 return isBought; 
             }
         public void SetType(int typ) { type = typ; }
@@ -58,11 +57,11 @@ namespace SAE_INFO
         /*-----------méthode----------*/
 
 
-        bool isBuyable()
+        public bool isBuyable()
         {
             if (level != 0) return false;
-            if (type == Type.COMPAGNIE || type == Type.GARE || type == Type.PROPRIETE) return true;
-            return false;
+            else if (type == Type.COMPAGNIE || type == Type.GARE || type == Type.PROPRIETE) return true;
+            else return false;
         }
 
 
@@ -183,6 +182,8 @@ namespace SAE_INFO
             }
         }
 
+
+
         /*--méthodes pour m_argent--*/
         //methode ajouter argent 
         public void AddMoney(int money)
@@ -199,6 +200,35 @@ namespace SAE_INFO
         {
             return m_argent;
         }
+        //Méthode d'achat de case
+        public bool Buy(Case caseIn)
+        {
+            string temp;
+            switch (caseIn.GetTyp())
+            {
+                case Type.COMPAGNIE:
+                    temp = " compagnie ";
+                    break;
+                case Type.GARE:
+                    temp = " gare ";
+                    break;
+                case Type.PROPRIETE:
+                    temp = " propriété ";
+                    break ;
+                default:
+                    return false;
+            }
+
+            if (MessageBox.Show("Voulez vous acheter cette" + temp + "pour " + caseIn.GetPrice(),
+                            "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                AddMoney(-caseIn.GetPrice());
+                caseIn.setProprio(this);
+                caseIn.SetLevel(1);
+                return true;
+            }
+            else return false;
+        }
 
 
 
@@ -206,6 +236,7 @@ namespace SAE_INFO
         //méthode move
         public void Move(int nb_case, Case[] tabCase)
         {
+            //déplacement
             if ((m_position + nb_case) > 39)
             {
                 nb_case -= 40 - m_position;
@@ -214,10 +245,14 @@ namespace SAE_INFO
             }
             m_position += nb_case;
 
-            if(tabCase[m_position].GetIsBought() == true)
+            //Paye si il faut
+            if(tabCase[m_position].isBuyable() == false)
             {
                 AddMoney(-tabCase[m_position].GetPrice());
-                tabCase[m_position].getProprio().AddMoney(tabCase[m_position].GetPrice());
+                if (tabCase[m_position].GetTyp() == Type.PROPRIETE)
+                {
+                    tabCase[m_position].getProprio().AddMoney(tabCase[m_position].GetPrice());
+                }
             }
         }
         //méthode back
@@ -231,6 +266,8 @@ namespace SAE_INFO
             return m_position;
         }
 
+
+
         /*--méthode pour m_name--*/
         //méthode set Name 
         public void SetName(string input_name)
@@ -243,12 +280,16 @@ namespace SAE_INFO
             return m_name;
         }
 
+
+
         /*--méthode pour m_classe--*/
         //méthode
         public int GetClass()
         {
             return m_class;
         }
+
+
 
         /*--méthode pour m_couldown--*/
         //méthode addCouldown 
