@@ -49,6 +49,7 @@ namespace SAE_INFO
         public void setProprio(Pion acheteur)
         {
             proprio = acheteur;
+            isBought = true;
         }
         public Pion getProprio()
         {
@@ -64,7 +65,34 @@ namespace SAE_INFO
             else return false;
         }
 
-
+        public string Afficher()
+        {
+            string str = "Type = ";
+            switch (type)
+            {
+                case Type.COMPAGNIE:
+                    str += "compagnie";
+                    break;
+                case Type.GARE:
+                    str += "gare";
+                    break;
+                case Type.PROPRIETE:
+                    str += "propriete";
+                    break;
+            }
+            str += "\nPrix = " + price;
+            str += "\nlevel = " + level;
+            str += "\nis bought = " + isBought;
+            str += "\nProprio :";
+            if (proprio != null)
+            {
+                str += "\n Nom = " + proprio.GetName();
+                str += "\n Argent = " + proprio.GetMoney();
+                str += "\n position = " + proprio.GetPosition();
+            }
+            else str += "pas encore défini";
+            return str;
+        }
 
         /*------------héritage----------*/
         public class Propriete : Case
@@ -153,6 +181,16 @@ namespace SAE_INFO
             m_position = 0;
             m_couldown = 0;
             m_name = "";
+            m_color = Color.Black;
+        }
+        public Pion(string name)
+        {
+            m_argent = 1500;
+            m_class = 0;
+            m_Isloose = false;
+            m_position = 0;
+            m_couldown = 0;
+            m_name = name;
             m_color = Color.Black;
         }
 
