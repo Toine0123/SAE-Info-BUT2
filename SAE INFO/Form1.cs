@@ -3,9 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 
 /*************Problèmes**********
- * certaine case ne sont pas proposer d'acheter quand on tombe la première fois dessus
- * Les terrain sont ancore achetable quand ils ont été acheter
- * l'argent n'est pas débité lors d'un achat
  ********************************/
 namespace SAE_INFO
 {
@@ -51,10 +48,10 @@ namespace SAE_INFO
                                        new Case.Propriete(350, new ColorC().BLEU),
                                        new Case.Taxes(100),
                                        new Case.Propriete(400, new ColorC().BLEU)};
-        Pion[] joueurs = new Pion[4] {new Pion(),
-                                      new Pion(),
-                                      new Pion(),
-                                      new Pion()};
+        Pion[] joueurs = new Pion[4] {new Pion("joueur 1"),
+                                      new Pion("joueur 2"),
+                                      new Pion("joueur 3"),
+                                      new Pion("joueur 4")};
         int resdes;
         int joueur = 0;
         public Form1()
@@ -78,6 +75,8 @@ namespace SAE_INFO
             label1.Text += "\nArgent après déplacement = " + joueurs[joueur].GetMoney();
             label1.Text += '\n' + "Numéro de Case = " + joueurs[joueur].GetPosition();
 
+            ///label7.Text = tabCase[joueurs[joueur].GetPosition()].Afficher();
+            
             /*affichage en fonction de la case*/
             //reset des label en vue de l'affichage
             label3.Text = "";
@@ -105,8 +104,8 @@ namespace SAE_INFO
                 case Type.GARE:
                     label2.Text = "Gare";
                     splitContainer1.Panel1.BackColor = Color.FromArgb(0, 0, 0);
-                    //achat de la propriété
-                    if(tabCase[joueur].isBuyable() == true)
+                    //achat de la gare
+                    if(tabCase[joueurs[joueur].GetPosition()].GetIsBought() == false)
                     {
                         joueurs[joueur].Buy(tabCase[joueurs[joueur].GetPosition()]);
                     }
@@ -153,7 +152,7 @@ namespace SAE_INFO
                     if (((Case.Propriete)tabCase[joueurs[joueur].GetPosition()]).color == new ColorC().VERT)
                         splitContainer1.Panel1.BackColor = new ColorC().VERT;
                     //achat de la propriété
-                    if (tabCase[joueur].isBuyable() == true)
+                    if (tabCase[joueurs[joueur].GetPosition()].GetIsBought() == false)
                     {
                         joueurs[joueur].Buy(tabCase[joueurs[joueur].GetPosition()]);
                     }
