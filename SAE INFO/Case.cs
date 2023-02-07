@@ -11,38 +11,44 @@ using System.Windows.Forms;
 namespace SAE_INFO
 {
 
-    class Case
+    class Case : Panel
     {
         /*-----------variables--------*/
         private
             int type;
-            int price;
-            int level;
-            bool isBought;
-            unsafe Pion proprio;
+        int price;
+        int level;
+        bool isBought;
+        unsafe Pion proprio;
 
 
         /*----------constructeur-------*/
         public Case()
-            {
-                this.level = 0;
-                this.type = 1;
-                this.isBought = false;
-                this.price = 0;
-            }
-        public Case(int type)
-            {
-                this.type = type;
+        {
+            this.level = 0;
+            this.type = 1;
             this.isBought = false;
+            this.price = 0;
+        }
+        public Case(int type, int nbCase)
+        {
+            this.type = type;
+            this.isBought = false;
+            if (type == Type.COMPAGNIE)
+            {
+                this.price = 150;
+            }
+            Location = Position(nbCase);
+            Size = new Size(70, 70);
+            Enabled = true;
+            Visible = true;
+            BackColor = Color.Gray;
         }
         /*-----------get/set----------*/
         public int GetTyp() { return type; }
         public int GetPrice() { return price; }
         public int GetLevel() { return level; }
-        public bool GetIsBought() 
-            {
-                return isBought; 
-            }
+        public bool GetIsBought(){ return isBought; }
         public void SetType(int typ) { type = typ; }
         public void SetPrice(int pric) { price = pric; }
         public void SetLevel(int lvl) { level = lvl; }
@@ -94,45 +100,98 @@ namespace SAE_INFO
             return str;
         }
 
+        private Point Position(int nbCase) {
+            int width = 80;
+            int height = 80;
+            int x_max = width * 10 + 20;
+            int y_max = height * 10 + 20;
+            int x_min = x_max - 10 * width;
+            int y_min = y_max - 10 * height;
+            if (nbCase < 11)
+            {
+                return new Point(x_max - nbCase * width, y_max);
+            }
+            if (nbCase < 21)
+            {
+                nbCase -= 10;
+                return new Point(x_min, y_max - nbCase * height);
+            }
+            if (nbCase < 31)
+            {
+                nbCase -= 20;
+                return new Point( x_min + nbCase * width, y_min);
+            }
+            if (nbCase < 41)
+            {
+                nbCase -= 30;
+                return new Point(x_max, y_min + nbCase * height);
+            }
+            else { return new Point(0, 0); }
+        }
+
         /*------------héritage----------*/
         public class Propriete : Case
         {
             /**-----------variables--------**/
             public Color color;
             /**----------constructeur-------**/
-            public Propriete(int price, Color color)
+            public Propriete(int price, Color color, int nbCase)
             {
                 this.level = 0;
                 this.type = Type.PROPRIETE;
                 this.isBought = false;
                 this.price = price;
                 this.color = color;
+                Location = Position(nbCase);
+                Size = new Size(70, 70);
+                Enabled = true;
+                Visible = true;
+                BackColor = color;
             }
-            
+
         }
 
         public class Gare : Case
         {
             /**----------constructeur-------**/
-            public Gare()
+            public Gare(int nbCase)
             {
                 this.level = 0;
                 this.type = Type.GARE;
                 this.price = 200;
                 this.isBought = false;
+                Location = Position(nbCase);
+                Size = new Size(70, 70);
+                Enabled = true;
+                Visible = true;
+                BackColor = Color.Black;
             }
         }
 
         public class Taxes : Case
         {
             /**----------constructeur-------**/
-            public Taxes(int price)
+            public Taxes(int price, int nbCase)
             {
                 this.type = Type.TAXES;
                 this.price = price;
+                isBought = false;
+                level = 0;
+                Location = Position(nbCase);
+                Size = new Size(70, 70);
+                Enabled = true;
+                Visible = true;
+                BackColor = Color.BlueViolet;
             }
         }
     }
+
+
+
+    //********************************************************************************************************//
+
+
+
 
     class Type
     {
@@ -159,17 +218,24 @@ namespace SAE_INFO
         public Color BLEU = Color.FromArgb(0, 114, 184);
     }
 
-    class Pion
+
+
+    //*************************************************************************************************************//
+
+
+
+
+    class Pion : PictureBox
     {   /*variables*/
         private
             int m_argent;
-            string m_name;
-            int m_class;
-            bool m_Isloose;
-            int m_position;
-            int m_couldown;
-            Color m_color;
-            bool m_IsUsable;
+        string m_name;
+        int m_class;
+        bool m_Isloose;
+        int m_position;
+        int m_couldown;
+        Color m_color;
+        bool m_IsUsable;
 
         /*méthodes de pion*/
         //constructeur 
@@ -183,7 +249,7 @@ namespace SAE_INFO
             m_name = "";
             m_color = Color.Black;
         }
-        public Pion(string name)
+        public Pion(string name, Color color, Case depart)
         {
             m_argent = 1500;
             m_class = 0;
@@ -191,13 +257,18 @@ namespace SAE_INFO
             m_position = 0;
             m_couldown = 0;
             m_name = name;
-            m_color = Color.Black;
+            m_color = color;
+            Location = depart.Location;
+            Image = Image.FromFile("Pion.png");
+            Size = new Size(depart.Size.Width-10,depart.Size.Height);
+            BackColor = color;
+            SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         //méthode loose verifie si un pions est perdue ou non 
         public void loose()
         {
-            if (m_argent == 0)
+            if (m_argent <= 0)
             {
                 m_Isloose = true;
             }
@@ -206,6 +277,10 @@ namespace SAE_INFO
                 m_Isloose = false;
             }
 
+        }
+        public bool getIsLoose()
+        {
+            return m_Isloose;
         }
         //méthode usable verifie si on peux utilisé la compétence 
         public void Usable()
@@ -252,7 +327,7 @@ namespace SAE_INFO
                     break;
                 case Type.PROPRIETE:
                     temp = " propriété ";
-                    break ;
+                    break;
                 default:
                     return false;
             }
@@ -277,14 +352,15 @@ namespace SAE_INFO
             //déplacement
             if ((m_position + nb_case) > 39)
             {
-                nb_case -= 40 - m_position;
+                nb_case -= 39 - m_position;
                 m_position = 0;
                 AddMoney(200);
             }
             m_position += nb_case;
 
+            Location = tabCase[m_position].Location;
             //Paye si il faut
-            if(tabCase[m_position].isBuyable() == false)
+            if (tabCase[m_position].isBuyable() == false)
             {
                 AddMoney(-tabCase[m_position].GetPrice());
                 if (tabCase[m_position].GetTyp() == Type.PROPRIETE)
@@ -345,5 +421,14 @@ namespace SAE_INFO
         {
             return m_couldown;
         }
+
+
+        /*************/
+        /* fonctions */
+        /*************/
+
+
+
+
     }
 }
