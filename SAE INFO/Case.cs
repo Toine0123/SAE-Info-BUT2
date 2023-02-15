@@ -14,67 +14,81 @@ namespace SAE_INFO
     class Case : SplitContainer
     {
         /*-----------variables--------*/
-        private
-            int type;
-        int price;
-        int level;
-        bool isBought;
-        unsafe Pion proprio;
+        private int m_type;
+        private int m_price;
+        private int m_level;
+        private bool m_isBought;
+        private unsafe Pion m_proprio;
+        private Color m_color;
+        private int m_pos;
+        
 
 
         /*----------constructeur-------*/
         public Case()
         {
-            this.level = 0;
-            this.type = 1;
-            this.isBought = false;
-            this.price = 0;
+            m_level = 0;
+            m_type = 1;
+            m_isBought = false;
+            m_price = 0;
         }
         public Case(int type, int nbCase)
         {
-            this.type = type;
-            this.isBought = false;
-            if (type == Type.COMPAGNIE)
+            m_type = type;
+            switch (m_type)
             {
-                this.price = 150;
+                case Type.COMPAGNIE:
+                    m_color = Color.AliceBlue;
+                    m_price = 150;
+                    break;
+                case Type.EVENEMENT:
+                    m_color = Color.Violet;
+                    break;
+                default:
+                    m_color = Color.Gray;
+                    break;
             }
+            m_isBought = false;
             Location = Position(nbCase);
             Size = new Size(70, 70);
             Enabled = true;
             Visible = true;
-            Panel1.BackColor = Color.Gray;
+            Panel1.BackColor = m_color;
         }
         /*-----------get/set----------*/
-        public int GetTyp() { return type; }
-        public int GetPrice() { return price; }
-        public int GetLevel() { return level; }
-        public bool GetIsBought(){ return isBought; }
-        public void SetType(int typ) { type = typ; }
-        public void SetPrice(int pric) { price = pric; }
-        public void SetLevel(int lvl) { level = lvl; }
+        public int GetTyp() { return m_type; }
+        public int GetPrice() { return m_price; }
+        public int GetLevel() { return m_level; }
+        public bool GetIsBought(){ return m_isBought; }
+        public void SetType(int typ) { m_type = typ; }
+        public void SetPrice(int pric) { m_price = pric; }
+        public void SetLevel(int lvl) { m_level = lvl; }
         public void setProprio(Pion acheteur)
         {
-            proprio = acheteur;
-            isBought = true;
+            m_proprio = acheteur;
+            m_isBought = true;
         }
         public Pion getProprio()
         {
-            return proprio;
+            return m_proprio;
         }
+        public Color GetColor() { return m_color; }
+        public int getPos() { return m_pos; }
+        public void setPos(int pos) { m_pos = pos; }
         /*-----------méthode----------*/
 
 
         public bool isBuyable()
         {
-            if (level != 0) return false;
-            else if (type == Type.COMPAGNIE || type == Type.GARE || type == Type.PROPRIETE) return true;
+            if (m_level != 0) return false;
+            else if (m_type == Type.COMPAGNIE || m_type == Type.GARE || m_type == Type.PROPRIETE) return true;
             else return false;
         }
 
         public string Afficher()
         {
             string str = "Type = ";
-            switch (type)
+            switch (m_type)
             {
                 case Type.COMPAGNIE:
                     str += "compagnie";
@@ -86,15 +100,15 @@ namespace SAE_INFO
                     str += "propriete";
                     break;
             }
-            str += "\nPrix = " + price;
-            str += "\nlevel = " + level;
-            str += "\nis bought = " + isBought;
+            str += "\nPrix = " + m_price;
+            str += "\nlevel = " + m_level;
+            str += "\nis bought = " + m_isBought;
             str += "\nProprio :";
-            if (proprio != null)
+            if (m_proprio != null)
             {
-                str += "\n Nom = " + proprio.GetName();
-                str += "\n Argent = " + proprio.GetMoney();
-                str += "\n position = " + proprio.GetPosition();
+                str += "\n Nom = " + m_proprio.GetName();
+                str += "\n Argent = " + m_proprio.GetMoney();
+                str += "\n position = " + m_proprio.GetPosition();
             }
             else str += "pas encore défini";
             return str;
@@ -137,26 +151,62 @@ namespace SAE_INFO
             SetLevel(1);
             Panel2.BackColor = owner.BackColor;
         }
+
+
         /*------------héritage----------*/
         public class Propriete : Case
         {
-            /**-----------variables--------**/
-            public Color color;
             /**----------constructeur-------**/
             public Propriete(int price, Color color, int nbCase)
             {
-                this.level = 0;
-                this.type = Type.PROPRIETE;
-                this.isBought = false;
-                this.price = price;
-                this.color = color;
+                this.m_level = 0;
+                this.m_type = Type.PROPRIETE;
+                this.m_isBought = false;
+                this.m_price = price;
+                this.m_color = color;
                 Location = Position(nbCase);
                 Size = new Size(70, 70);
                 Enabled = true;
                 Visible = true;
                 Panel1.BackColor = color;
             }
-
+            /**-----------fonctions------------**/
+            public bool IsBuildable()
+            {
+                if (m_proprio == null) { return false; }
+                else
+                {
+                    if (m_color == new ColorC().MARRON || m_color == new ColorC().BLEU)
+                    {
+                        for(int i = 0; i<m_proprio.GetPossedees().Length; i++)
+                        {
+                            if(m_proprio.GetPossedees()[i] != this && m_proprio.GetPossedees()[i] != null && GetColor() == m_proprio.GetPossedees()[i].GetColor())
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < m_proprio.GetPossedees().Length; i++)
+                        {
+                            if (m_proprio.GetPossedees()[i] != this && m_proprio.GetPossedees()[i] != null && GetColor() == m_proprio.GetPossedees()[i].GetColor())
+                            {
+                                for (int j = i+1; j < m_proprio.GetPossedees().Length; j++)
+                                {
+                                    if (m_proprio.GetPossedees()[j] != this && m_proprio.GetPossedees()[j] != null && GetColor() == m_proprio.GetPossedees()[j].GetColor())
+                                    {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
         }
 
         public class Gare : Case
@@ -164,10 +214,10 @@ namespace SAE_INFO
             /**----------constructeur-------**/
             public Gare(int nbCase)
             {
-                this.level = 0;
-                this.type = Type.GARE;
-                this.price = 200;
-                this.isBought = false;
+                this.m_level = 0;
+                this.m_type = Type.GARE;
+                this.m_price = 200;
+                this.m_isBought = false;
                 Location = Position(nbCase);
                 Size = new Size(70, 70);
                 Enabled = true;
@@ -181,10 +231,10 @@ namespace SAE_INFO
             /**----------constructeur-------**/
             public Taxes(int price, int nbCase)
             {
-                this.type = Type.TAXES;
-                this.price = price;
-                isBought = false;
-                level = 0;
+                this.m_type = Type.TAXES;
+                this.m_price = price;
+                m_isBought = false;
+                m_level = 0;
                 Location = Position(nbCase);
                 Size = new Size(70, 70);
                 Enabled = true;
