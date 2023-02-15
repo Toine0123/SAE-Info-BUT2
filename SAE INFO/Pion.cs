@@ -10,15 +10,15 @@ namespace SAE_INFO
 {
     class Pion : PictureBox
     {   /*variables*/
-        private
-            int m_argent;
-        string m_name;
-        int m_class;
-        bool m_Isloose;
-        int m_position;
-        int m_couldown;
-        Color m_color;
-        bool m_IsUsable;
+        private int m_argent;
+        private string m_name;
+        private int m_class;
+        private bool m_Isloose;
+        private int m_position;
+        private int m_couldown;
+        private Color m_color;
+        private bool m_speIsUsable;
+        private Case[] m_poseder;
 
         /*méthodes de pion*/
         //constructeur 
@@ -46,6 +46,7 @@ namespace SAE_INFO
             Size = new Size(depart.Size.Width - 10, depart.Size.Height);
             BackColor = color;
             SizeMode = PictureBoxSizeMode.Zoom;
+            m_poseder = new Case[28];
         }
 
         //méthode loose verifie si un pions est perdue ou non 
@@ -70,11 +71,11 @@ namespace SAE_INFO
         {
             if (m_couldown == 0)
             {
-                m_IsUsable = true;
+                m_speIsUsable = true;
             }
             else if (m_couldown == 1)
             {
-                m_IsUsable = false;
+                m_speIsUsable = false;
             }
         }
 
@@ -120,6 +121,9 @@ namespace SAE_INFO
             {
                 AddMoney(-caseIn.GetPrice());
                 caseIn.Buy(this);
+                int i = 0;
+                while(m_poseder[i] != null) { i++; }
+                m_poseder[i] = caseIn;
                 return true;
             }
             else return false;
@@ -209,7 +213,12 @@ namespace SAE_INFO
         /* fonctions */
         /*************/
 
+        public Case[] GetPossedees()
+        {
+            return m_poseder;
+        }
 
+        public Color GetColor() { return m_color; }
 
 
     }
