@@ -13,7 +13,6 @@ namespace SAE_INFO
         private int m_argent;
         private string m_name;
         private int m_class;
-        private bool m_Isloose;
         private int m_position;
         private int m_couldown;
         private Color m_color;
@@ -26,7 +25,6 @@ namespace SAE_INFO
         {
             m_argent = 1500;
             m_class = 0;
-            m_Isloose = false;
             m_position = 0;
             m_couldown = 0;
             m_name = "";
@@ -36,7 +34,6 @@ namespace SAE_INFO
         {
             m_argent = 1500;
             m_class = 0;
-            m_Isloose = false;
             m_position = 0;
             m_couldown = 0;
             m_name = name;
@@ -49,22 +46,24 @@ namespace SAE_INFO
             m_poseder = new Case[28];
         }
 
-        //méthode loose verifie si un pions est perdue ou non 
-        public void loose()
+        //méthode loose verifie si un pions est perdue ou non
+        public bool IsLoose()
         {
             if (m_argent <= 0)
             {
-                m_Isloose = true;
+                int j = 0;
+                while(m_poseder[j] != null) { j++; }
+                for(int i = 0; i < j; i++)
+                {
+                    m_poseder[i].Loose();
+                    m_poseder[i] = null;
+                }
+                return true;
             }
             else
             {
-                m_Isloose = false;
+                return false;
             }
-
-        }
-        public bool getIsLoose()
-        {
-            return m_Isloose;
         }
         //méthode usable verifie si on peux utilisé la compétence 
         public void Usable()
@@ -87,11 +86,6 @@ namespace SAE_INFO
         {
             m_argent = m_argent + money;
         }
-        //méthode enlevé argent 
-        public void RemoveMoney(int money)
-        {
-            m_argent = m_argent - money;
-        }
         //méthode get money
         public int GetMoney()
         {
@@ -100,6 +94,7 @@ namespace SAE_INFO
         //Méthode d'achat de case
         public bool Buy(Case caseIn)
         {
+            if(m_argent < caseIn.GetPrice()) { return false; }
             string temp;
             switch (caseIn.GetTyp())
             {
@@ -120,10 +115,10 @@ namespace SAE_INFO
                             "Achat de ", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 AddMoney(-caseIn.GetPrice());
-                caseIn.Buy(this);
                 int i = 0;
-                while(m_poseder[i] != null) { i++; }
+                while (m_poseder[i] != null) { i++; }
                 m_poseder[i] = caseIn;
+                caseIn.Buy(this);
                 return true;
             }
             else return false;
@@ -148,10 +143,33 @@ namespace SAE_INFO
             //Paye si il faut
             if (tabCase[m_position].isBuyable() == false)
             {
-                AddMoney(-tabCase[m_position].GetPrice());
-                if (tabCase[m_position].GetTyp() == Type.PROPRIETE)
+                if(tabCase[m_position].GetTyp() == Type.COMPAGNIE)
                 {
-                    tabCase[m_position].getProprio().AddMoney(tabCase[m_position].GetPrice());
+                    bool temp = false;
+                    Pion benef = tabCase[m_position].getProprio();
+                    for(int i = 0; i < benef.GetPossedees().Length; i++)
+                    {
+                        if(benef.GetPossedees()[i] != null && benef.GetPossedees()[i].GetTyp() == Type.COMPAGNIE && benef.GetPossedees()[i] != tabCase[m_position])
+                        {
+                            temp = true;
+                        }
+                    }
+                    if (temp)
+                    {
+                        AddMoney(-(10 * nb_case));
+                        benef.AddMoney((10 * nb_case));
+                    }else
+                    {
+                        AddMoney(-4 * nb_case);
+                        benef.AddMoney(4 * nb_case);
+                    }
+                }else
+                {
+                    AddMoney(-tabCase[m_position].GetPrice());
+                    if(tabCase[m_position].GetTyp() == Type.GARE || tabCase[m_position].GetTyp() == Type.PROPRIETE)
+                    {
+                        tabCase[m_position].getProprio().AddMoney(tabCase[m_position].GetPrice());
+                    }
                 }
             }
         }
