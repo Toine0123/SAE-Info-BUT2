@@ -10,45 +10,45 @@ namespace SAE_INFO
     public partial class Form1 : Form
     {
         static Case[] plateau = new Case[40] {new Case(Type.DEPART, 0),
-                                       new Case.Propriete(60, new ColorC().MARRON, 1),
+                                       new Case.Propriete(new ColorC().MARRON, 1),
                                        new Case(Type.EVENEMENT, 2),
-                                       new Case.Propriete(60, new ColorC().MARRON, 3),
+                                       new Case.Propriete(new ColorC().MARRON, 3),
                                        new Case.Taxes(200, 4),
                                        new Case.Gare(5),
-                                       new Case.Propriete(100, new ColorC().CYAN, 6),
+                                       new Case.Propriete(new ColorC().CYAN, 6),
                                        new Case(Type.EVENEMENT, 7),
-                                       new Case.Propriete(100, new ColorC().CYAN, 8),
-                                       new Case.Propriete(120, new ColorC().CYAN, 9),
+                                       new Case.Propriete(new ColorC().CYAN, 8),
+                                       new Case.Propriete(new ColorC().CYAN, 9),
                                        new Case(Type.PRISON, 10),
-                                       new Case.Propriete(140, new ColorC().ROSE, 11),
+                                       new Case.Propriete(new ColorC().ROSE, 11),
                                        new Case(Type.COMPAGNIE, 12),
-                                       new Case.Propriete(140, new ColorC().ROSE, 13),
-                                       new Case.Propriete(160, new ColorC().ROSE, 14),
+                                       new Case.Propriete(new ColorC().ROSE, 13),
+                                       new Case.Propriete(new ColorC().ROSE, 14),
                                        new Case.Gare(15),
-                                       new Case.Propriete(180, new ColorC().ORANGE, 16),
+                                       new Case.Propriete(new ColorC().ORANGE, 16),
                                        new Case(Type.EVENEMENT, 17),
-                                       new Case.Propriete(180, new ColorC().ORANGE, 18),
-                                       new Case.Propriete(200, new ColorC().ORANGE, 19),
+                                       new Case.Propriete(new ColorC().ORANGE, 18),
+                                       new Case.Propriete(new ColorC().ORANGE, 19),
                                        new Case(Type.PARCGRATUIT, 20),
-                                       new Case.Propriete(220, new ColorC().ROUGE, 21),
+                                       new Case.Propriete(new ColorC().ROUGE, 21),
                                        new Case(Type.EVENEMENT, 22),
-                                       new Case.Propriete(220, new ColorC().ROUGE, 23),
-                                       new Case.Propriete(240, new ColorC().ROUGE, 24),
+                                       new Case.Propriete(new ColorC().ROUGE, 23),
+                                       new Case.Propriete(new ColorC().ROUGE, 24),
                                        new Case.Gare(25),
-                                       new Case.Propriete(260, new ColorC().JAUNE, 26),
-                                       new Case.Propriete(260, new ColorC().JAUNE, 27),
+                                       new Case.Propriete(new ColorC().JAUNE, 26),
+                                       new Case.Propriete(new ColorC().JAUNE, 27),
                                        new Case(Type.COMPAGNIE, 28),
-                                       new Case.Propriete(280, new ColorC().JAUNE, 29),
+                                       new Case.Propriete(new ColorC().JAUNE, 29),
                                        new Case(Type.ALLERENPRISON, 30),
-                                       new Case.Propriete(300, new ColorC().VERT, 31),
-                                       new Case.Propriete(300, new ColorC().VERT, 32),
+                                       new Case.Propriete(new ColorC().VERT, 31),
+                                       new Case.Propriete(new ColorC().VERT, 32),
                                        new Case(Type.EVENEMENT, 33),
-                                       new Case.Propriete(320, new ColorC().VERT, 34),
+                                       new Case.Propriete(new ColorC().VERT, 34),
                                        new Case.Gare(35),
                                        new Case(Type.EVENEMENT, 36),
-                                       new Case.Propriete(350, new ColorC().BLEU, 37),
+                                       new Case.Propriete(new ColorC().BLEU, 37),
                                        new Case.Taxes(100, 38),
-                                       new Case.Propriete(400, new ColorC().BLEU, 39)};
+                                       new Case.Propriete(new ColorC().BLEU, 39)};
         static Pion[] joueurs = new Pion[4] {new Pion("joueur 1", Color.Black, plateau[0]),
                                       new Pion("joueur 2", Color.Blue, plateau[0]),
                                       new Pion("balkani", Color.Green, plateau[0]),
@@ -85,12 +85,10 @@ namespace SAE_INFO
 
         private void buttonDes_Click(object sender, EventArgs e)
         {
-            joueurs[joueur].loose();
-            while (joueurs[joueur].getIsLoose())
+            while (joueurs[joueur].IsLoose())
             {
                 joueur ++;
                 if (joueur > 3) joueur = 0;
-                joueurs[joueur].loose();
             }
             label6.Text = "tour de joueur " + (joueur + 1) + "\n";
             /*gestion du lancer de dé et avancer sur le plateaux*/
@@ -107,12 +105,13 @@ namespace SAE_INFO
 
             affichageCase(joueurs[joueur].GetPosition());
             //achat de la propriété
-            if (plateau[joueurs[joueur].GetPosition()].GetIsBought() == false)
+            if (plateau[joueurs[joueur].GetPosition()].isBuyable() == true)
             {
                 joueurs[joueur].Buy(plateau[joueurs[joueur].GetPosition()]);
             }
 
             label1.Text += "\nArgent en fin de tour = " + joueurs[joueur].GetMoney();
+            joueurs[joueur].IsLoose();
             joueur += 1;
             if(joueur>3) joueur = 0;
             label6.Text += "joueur suivant : " + (joueur + 1);
@@ -193,9 +192,9 @@ namespace SAE_INFO
                     break;
                 case Type.PROPRIETE:
                     label2.Text = "Propriété";
-                    label3.Text = "Terrain nu     " + plateau[pos].GetPrice();
-                    label4.Text = "1 maison     " + (plateau[pos].GetPrice() * 2);
-                    label5.Text = "2 maisons     " + (plateau[pos].GetPrice() * 3);
+                    label3.Text = "Terrain nu     " + plateau[pos].GetTabPrice()[1];
+                    label4.Text = "1 maison     " + (plateau[pos].GetTabPrice()[2]);
+                    label5.Text = "2 maisons     " + (plateau[pos].GetTabPrice()[3]);
                     label5.Text += "\nIsBuildable = " + ((Case.Propriete)plateau[pos]).IsBuildable();
                     switch (plateau[pos].GetLevel())
                     {
