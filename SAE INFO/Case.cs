@@ -69,15 +69,22 @@ namespace SAE_INFO
         {
             m_proprio = acheteur;
         }
-        public Pion getProprio()
-        {
-            return m_proprio;
-        }
+        public Pion getProprio(){return m_proprio;}
         public Color GetColor() { return m_color; }
         public int getPos() { return m_pos; }
         public void setPos(int pos) { m_pos = pos; }
         /*-----------méthode----------*/
 
+        public bool isevent() {
+           if(m_type == Type.EVENEMENT) 
+            { 
+            return true;
+            }
+            else
+            {
+                return false;   
+            }
+        }
 
         public bool isBuyable()
         {

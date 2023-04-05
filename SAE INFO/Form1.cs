@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection.Emit;
+using System.Security;
 using System.Windows.Forms;
 
 /*************Problèmes**********
@@ -57,11 +59,47 @@ namespace SAE_INFO
         int resdes;
         int joueur = 0;
 
-        
 
-            
 
-        public Form1()
+        static Evenement.deplacement[] evenement_1 = new Evenement.deplacement[4]
+        {
+                new Evenement.deplacement("avancer de 3 cases",1,3),
+                new Evenement.deplacement("reculer de 3 cases",2,-3),
+                new Evenement.deplacement("avancer de 1 case",3,1),
+                new Evenement.deplacement("reculer de 1 case",4,-1),
+        };
+
+        static Evenement.teleportation[] evenement_2 = new Evenement.teleportation[10]
+        {
+                new Evenement.teleportation("aller jusqu'à la gare Monparnasse",5,5),
+                new Evenement.teleportation("aller jusqu'à la gare de Lyon",6,15),
+                new Evenement.teleportation("aller jusqu'à la gare du Nord",7,25),
+                new Evenement.teleportation("aller jusqu'à la gare de Saint-Lazare",8,35),
+                new Evenement.teleportation("aller jusqu'à l'avenue Henry-Martin",9,24),
+                new Evenement.teleportation("aller jusqu'à la rue de la paix",10,39),
+                new Evenement.teleportation("aller jusqu'à la compagnie d'élèctricité",11,11),
+                new Evenement.teleportation("aller jusqu'à la gare des eaux",12,28),
+                new Evenement.teleportation("aller jusqu'au parc gratuit",22,20),
+                new Evenement.teleportation("aller jusqu'à Boulevard de la villette",13,12),
+        };
+        static Evenement.valeur[] evenement_3 = new Evenement.valeur[8]
+        {
+                new Evenement.valeur("joyeux anniversaire chaque joueur vous verse 10 $",14,10),
+                new Evenement.valeur("vous avez été élue président du conseille verser 50 $ à chaque joueur",15,50),
+                new Evenement.valeur("votre prêt et votre immeuble vous rapport recevez 150 $",16,150),
+                new Evenement.valeur("vous avez été second dans un concour de prix de beauté recever 10 $",17,10),
+                new Evenement.valeur("frais médicaux payer 100 $",18,100),
+                new Evenement.valeur("frais de scolarité payer 50 $",19,50),
+                new Evenement.valeur("excés de vitesse payer 15 $",20,15),
+                new Evenement.valeur("la banque vous verse des dividende recevez 100 $",21,100),
+        };
+
+        int choose =0;
+        int chance =0;
+
+
+
+public Form1()
         {
             for(int i = 0; i < 40; i++)
             {
@@ -76,6 +114,7 @@ namespace SAE_INFO
             }
             Controls.Add(afficheur);
             InitializeComponent();
+            HideEvent();
         }
 
         private void Case_Click(object sender, EventArgs e)
@@ -85,6 +124,7 @@ namespace SAE_INFO
 
         private void buttonDes_Click(object sender, EventArgs e)
         {
+            HideEvent();
             while (joueurs[joueur].IsLoose())
             {
                 joueur ++;
@@ -104,12 +144,67 @@ namespace SAE_INFO
             label1.Text += '\n' + "Numéro de Case = " + joueurs[joueur].GetPosition();
 
             affichageCase(joueurs[joueur].GetPosition());
+            
+            //gestion d'évènement 
+            if (plateau[joueurs[joueur].GetPosition()].isevent() == true)
+            {
+                choose = rand.Next(2)+1;
+                switch (choose)
+                {
+                    case 1 :
+                        chance = rand.Next(3);
+
+                        //affichage de l'évent
+                        ShowEvent();
+                        label7.Text = evenement_1[chance].GetText();
+                        
+                        //gestion event avancer ou reculer 
+                        joueurs[joueur].Move(evenement_1[chance].GetMove(), plateau);
+
+                        break;
+                    
+                    case 2:
+                        chance = rand.Next(9);
+
+                        //affichage de l'évent
+                        ShowEvent();
+                        label7.Text = evenement_2[chance].GetText();
+
+                        //gestion de l'évent aller à ...
+                        evenement_2[chance].AllerVers(joueurs[joueur],plateau);
+
+                        break;
+                    case 3:
+                        chance = rand.Next(7);
+
+                        //affichage de l'évent
+                        ShowEvent();
+                        label7.Text = evenement_3[chance].GetText();
+
+                        //gestion event anniversaire 
+                        if (evenement_3[chance].GetId() == 14)
+                        {
+                            evenement_3[chance].anniversaire(joueurs, joueur);
+                        }
+                        //gestion event president 
+                        if (evenement_3[chance].GetId() == 15)
+                        {
+                            evenement_3[chance].president(joueurs, joueur);
+                        }
+                        //gestion event ajout d'argent
+                        else 
+                        {
+                            joueurs[joueur].AddMoney(evenement_3[chance].GetVal());
+                        }
+                        break;
+                        
+                }
+            }
             //achat de la propriété
             if (plateau[joueurs[joueur].GetPosition()].isBuyable() == true)
             {
                 joueurs[joueur].Buy(plateau[joueurs[joueur].GetPosition()]);
             }
-
             label1.Text += "\nArgent en fin de tour = " + joueurs[joueur].GetMoney();
             joueurs[joueur].IsLoose();
             joueur += 1;
@@ -152,7 +247,18 @@ namespace SAE_INFO
         {
 
         }
-
+        private void HideEvent()
+        {
+            label7.Hide();
+            label8.Hide();
+            splitContainer2.Hide();
+        }
+        private void ShowEvent() 
+        {
+            label7.Show();
+            label8.Show();
+            splitContainer2.Show();
+        }
         private void affichageCase(int pos)
         {
             /*affichage en fonction de la case*/
@@ -216,5 +322,7 @@ namespace SAE_INFO
                     break;
             }
         }
+
+       
     }
 }

@@ -1,0 +1,35 @@
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\bin\Debug\Pion.png
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\bin\Debug\SAE INFO.exe.config
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\bin\Debug\SAE INFO.exe
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\bin\Debug\SAE INFO.pdb
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.csproj.AssemblyReference.cache
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.csproj.SuggestedBindingRedirects.cache
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE_INFO.Form1.resources
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE_INFO.Properties.Resources.resources
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.csproj.GenerateResource.cache
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.csproj.CoreCompileInputs.cache
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.exe
+C:\Users\adrie\OneDrive\Bureau\IUT\SAE-Info-BUT2-master\SAE INFO\obj\Debug\SAE INFO.pdb
+D:\SAE-Info-BUT2-save\SAE INFO\bin\Debug\Pion.png
+D:\SAE-Info-BUT2-save\SAE INFO\bin\Debug\SAE INFO.exe.config
+D:\SAE-Info-BUT2-save\SAE INFO\bin\Debug\SAE INFO.exe
+D:\SAE-Info-BUT2-save\SAE INFO\bin\Debug\SAE INFO.pdb
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE INFO.csproj.AssemblyReference.cache
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE_INFO.Form1.resources
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE_INFO.Properties.Resources.resources
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE INFO.csproj.GenerateResource.cache
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE INFO.csproj.CoreCompileInputs.cache
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE INFO.exe
+D:\SAE-Info-BUT2-save\SAE INFO\obj\Debug\SAE INFO.pdb
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\bin\Debug\Pion.png
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\bin\Debug\SAE INFO.exe.config
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\bin\Debug\SAE INFO.exe
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\bin\Debug\SAE INFO.pdb
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.csproj.AssemblyReference.cache
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.csproj.SuggestedBindingRedirects.cache
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE_INFO.Form1.resources
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE_INFO.Properties.Resources.resources
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.csproj.GenerateResource.cache
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.csproj.CoreCompileInputs.cache
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.exe
+C:\Users\antod\Documents\SAE_INFO\Nouveau dossier\SAE INFO\obj\Debug\SAE INFO.pdb

@@ -137,6 +137,10 @@ namespace SAE_INFO
                 m_position = 0;
                 AddMoney(200);
             }
+            if((m_position + nb_case)< 0){
+                nb_case += 39 - m_position;
+                m_position = 0;
+            }
             m_position += nb_case;
 
             Location = tabCase[m_position].Location;
@@ -182,6 +186,10 @@ namespace SAE_INFO
         public int GetPosition()
         {
             return m_position;
+        }
+        public void SetPosition(int pos) 
+        { 
+            m_position = pos; 
         }
 
 
